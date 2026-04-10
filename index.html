@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#00796B">
+    <meta name="description" content="钓鱼潮汐速查 - 专业钓鱼潮汐时间查询工具">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="潮汐速查">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <title>钓鱼潮汐速查</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 顶部导航 -->
+        <header class="app-header">
+            <h1>🎣 钓鱼潮汐速查</h1>
+            <div class="offline-indicator" id="offlineIndicator">离线模式</div>
+        </header>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 地点选择 -->
+            <section class="location-section">
+                <div class="section-header">
+                    <h2>📍 选择钓点</h2>
+                    <button class="btn-add" id="btnAddLocation">+ 添加</button>
+                </div>
+                <div class="location-list" id="locationList">
+                    <!-- 动态加载 -->
+                </div>
+            </section>
+
+            <!-- 潮汐信息 -->
+            <section class="tide-section" id="tideSection">
+                <h2>🌊 今日潮汐</h2>
+                <div class="tide-date" id="tideDate"></div>
+                <div class="tide-card">
+                    <div class="tide-info">
+                        <div class="tide-type high" id="highTideLabel">高潮</div>
+                        <div class="tide-time" id="highTideTime">--:--</div>
+                        <div class="tide-height" id="highTideHeight">-- m</div>
+                    </div>
+                    <div class="tide-info">
+                        <div class="tide-type low" id="lowTideLabel">低潮</div>
+                        <div class="tide-time" id="lowTideTime">--:--</div>
+                        <div class="tide-height" id="lowTideHeight">-- m</div>
+                    </div>
+                </div>
+                <!-- 潮汐时间表 -->
+                <div class="tide-table" id="tideTable">
+                    <h3>潮汐时间表</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>时间</th>
+                                <th>潮位</th>
+                                <th>高度</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tideTableBody">
+                            <!-- 动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 最佳钓鱼时间 -->
+            <section class="fishing-time-section" id="fishingTimeSection">
+                <h2>⭐ 最佳钓鱼时间</h2>
+                <div class="recommendation-card">
+                    <div class="rec-header">
+                        <span class="rec-label">今日推荐时段</span>
+                        <span class="rec-score" id="fishingScore">--</span>
+                    </div>
+                    <div class="rec-times" id="bestFishingTimes">
+                        <!-- 动态加载 -->
+                    </div>
+                    <div class="rec-tip" id="fishingTip">
+                        <!-- 动态加载 -->
+                    </div>
+                </div>
+                <div class="fishing-calendar" id="fishingCalendar">
+                    <h3>本周钓鱼指数</h3>
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- 动态加载 -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 底部导航 -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-page="tide">🌊 潮汐</button>
+            <button class="nav-btn" data-page="spots">📍 钓点</button>
+            <button class="nav-btn" data-page="guide">📖 指南</button>
+        </nav>
+    </div>
+
+    <!-- 添加钓点模态框 -->
+    <div class="modal" id="addLocationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>添加钓点</h3>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="locationName">钓点名称</label>
+                    <input type="text" id="locationName" placeholder="如：厦门鼓浪屿" required>
+                </div>
+                <div class="form-group">
+                    <label for="locationRegion">所属区域</label>
+                    <select id="locationRegion">
+                        <option value="east">东海沿岸</option>
+                        <option value="south">南海沿岸</option>
+                        <option value="north">渤海黄海</option>
+                        <option value="custom">自定义</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="locationNotes">备注</label>
+                    <textarea id="locationNotes" placeholder="钓点特色、鱼种等"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-cancel" id="btnCancel">取消</button>
+                    <button class="btn-save" id="btnSaveLocation">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 钓点管理页面 -->
+    <div class="page-hidden" id="spotsPage">
+        <header class="app-header">
+            <h1>📍 我的钓点</h1>
+            <button class="btn-back" id="btnBackSpots">← 返回</button>
+        </header>
+        <main class="spots-main">
+            <div class="spots-list" id="mySpotsList">
+                <!-- 动态加载 -->
+            </div>
+            <button class="btn-add-spot" id="btnAddSpot">+ 添加新钓点</button>
+        </main>
+    </div>
+
+    <!-- 钓鱼指南页面 -->
+    <div class="page-hidden" id="guidePage">
+        <header class="app-header">
+            <h1>📖 钓鱼指南</h1>
+            <button class="btn-back" id="btnBackGuide">← 返回</button>
+        </header>
+        <main class="guide-main">
+            <article class="guide-article">
+                <h3>潮汐与钓鱼的关系</h3>
+                <p>潮汐变化直接影响鱼类的活动规律。一般来说：</p>
+                <ul>
+                    <li><strong>涨潮初期</strong>：鱼类开始活跃，适合垂钓</li>
+                    <li><strong>高潮前后</strong>：鱼群聚集，最佳时机</li>
+                    <li><strong>落潮中期</strong>：鱼群分散，效果一般</li>
+                    <li><strong>低潮期</strong>：多数鱼种不活跃</li>
+                </ul>
+                <h3>最佳钓鱼时段推荐</h3>
+                <p>根据潮汐规律，推荐以下时段：</p>
+                <div class="guide-tip">
+                    <p>🎯 <strong>黄金时段</strong>：高潮前1-2小时</p>
+                    <p>⭐ <strong>次佳时段</strong>：涨潮初期、落潮末期</p>
+                    <p>⚠️ <strong>不推荐</strong>：低潮前后2小时</p>
+                </div>
+                <h3>不同潮位的策略</h3>
+                <p><strong>大潮期</strong>（潮差大）：适合钓近岸，使用较重的钓组</p>
+                <p><strong>小潮期</strong>（潮差小）：适合钓深水区，可使用轻型钓组</p>
+                <p><strong>平潮期</strong>：适合休息或调整钓具</p>
+            </article>
+        </main>
+    </div>
+
+    <script src="tide-data.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // 注册 Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker 注册成功'))
+                .catch(err => console.log('Service Worker 注册失败:', err));
+        }
+
+        // 监听网络状态
+        window.addEventListener('online', () => {
+            document.getElementById('offlineIndicator').style.display = 'none';
+        });
+        window.addEventListener('offline', () => {
+            document.getElementById('offlineIndicator').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
