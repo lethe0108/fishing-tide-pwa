@@ -64,8 +64,8 @@ self.addEventListener('fetch', event => {
         // 否则发起网络请求
         return fetch(event.request)
           .then(networkResponse => {
-            // 检查响应是否有效
-            if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+            // 检查响应是否有效（移除type判断，允许跨域资源缓存）
+            if (!networkResponse || networkResponse.status !== 200) {
               return networkResponse;
             }
 
@@ -81,13 +81,59 @@ self.addEventListener('fetch', event => {
             return networkResponse;
           })
           .catch(error => {
-            console.error('网络请求失败:', error);
-            // 返回离线页面或错误响应
-            return new Response('离线模式 - 请检查网络连接', {
+            console.error('[SW] 网络请求失败:', error);
+            // 返回友好的离线HTML页面
+            return new Response(`
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>离线模式 - 钓鱼潮汐速查</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #1e3a5f 0%, #0f2027 100%);
+      color: white;
+      text-align: center;
+    }
+    .offline-container {
+      padding: 40px 20px;
+      max-width: 400px;
+    }
+    .icon { font-size: 64px; margin-bottom: 20px; }
+    h1 { font-size: 24px; margin: 0 0 16px; }
+    p { color: #b0b0b0; margin: 0 0 24px; }
+    button {
+      background: #4a9eff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover { background: #3a8eef; }
+  </style>
+</head>
+<body>
+  <div class="offline-container">
+    <div class="icon">🎣</div>
+    <h1>离线模式</h1>
+    <p>无法连接到网络，请检查您的网络连接后重试</p>
+    <button onclick="location.reload()">重新加载</button>
+  </div>
+</body>
+</html>`, {
               status: 503,
               statusText: 'Service Unavailable',
               headers: new Headers({
-                'Content-Type': 'text/plain'
+                'Content-Type': 'text/html; charset=utf-8'
               })
             });
           });
