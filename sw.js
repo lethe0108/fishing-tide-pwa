@@ -49,9 +49,9 @@ self.addEventListener('fetch', event => {
   // 跳过非 GET 请求
   if (event.request.method !== 'GET') return;
   
-  // 跳过 chrome-extension 和 data URL
+  // 跳过 chrome-extension、data 和 blob URL
   const url = new URL(event.request.url);
-  if (url.protocol === 'chrome-extension:' || url.protocol === 'data:') return;
+  if (url.protocol === 'chrome-extension:' || url.protocol === 'data:' || url.protocol === 'blob:') return;
 
   event.respondWith(
     caches.match(event.request)

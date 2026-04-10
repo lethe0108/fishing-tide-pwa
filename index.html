@@ -182,6 +182,15 @@
     <script src="tide-data.js"></script>
     <script src="app.js"></script>
     <script>
+        // 检测鸿蒙系统并添加相应类
+        function detectHarmonyOS() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isHarmony = userAgent.includes('harmony') || userAgent.includes('hm/osa');
+            if (isHarmony) {
+                document.body.classList.add('hmos-platform');
+            }
+        }
+        
         // 注册 Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
@@ -196,6 +205,9 @@
         window.addEventListener('offline', () => {
             document.getElementById('offlineIndicator').style.display = 'block';
         });
+        
+        // 检测平台
+        detectHarmonyOS();
     </script>
 </body>
 </html>

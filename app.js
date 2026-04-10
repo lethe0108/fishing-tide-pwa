@@ -3,12 +3,22 @@
  * PWA 应用核心功能实现
  */
 
+// 鸿蒙系统检测
+function detectHarmonyOS() {
+  if (typeof navigator !== 'undefined') {
+    const userAgent = navigator.userAgent.toLowerCase();
+    return userAgent.includes('harmony') || userAgent.includes('hm/osa');
+  }
+  return false;
+}
+
 // 应用主类
 class FishingTideApp {
   constructor() {
     this.currentLocation = null;
     this.currentDate = new Date();
     this.tideData = null;
+    this.isHarmonyOS = detectHarmonyOS();
     this.init();
   }
 

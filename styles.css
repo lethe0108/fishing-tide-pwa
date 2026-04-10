@@ -754,15 +754,20 @@ section {
   }
 }
 
-/* 鸿蒙系统适配 */
-@media (device-type: phone) and (os: harmony) {
+/* 鸿蒙系统适配 - 使用标准媒体查询 */
+@media screen and (max-height: 720px) and (orientation: portrait) {
   .app-container {
-    padding-top: var(--status-bar-height, 0);
+    padding-top: env(safe-area-inset-top, 0);
   }
   
   .app-header {
-    padding-top: calc(16px + var(--status-bar-height, 0));
+    padding-top: calc(16px + env(safe-area-inset-top, 0));
   }
+}
+
+/* 鸿蒙系统浏览器特定样式 */
+.hmos-platform {
+  /* 针对鸿蒙系统平台的特定样式 */
 }
 
 /* 暗黑模式支持 */
